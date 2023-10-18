@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="https://example.org/">
+
+    <rdf:Description rdf:about="https://example.org/John">
+        <ex:isA>Human</ex:isA>
+        <ex:livesIn>City</ex:livesIn>
+        <ex:age>30</ex:age>
+        <ex:profession>Doctor</ex:profession>
+        <ex:education>PhD</ex:education>
+        <ex:hobby>Guitar</ex:hobby>
+        <ex:friend rdf:resource="https://example.org/Lucy"/>
+    </rdf:Description>
+    
+    <rdf:Description rdf:about="https://example.org/Lucy">
+        <ex:isA>Human</ex:isA>
+        <ex:livesIn>City</ex:livesIn>
+        <ex:age>25</ex:age>
+        <ex:profession>Engineer</ex:profession>
+        <ex:education>Masters</ex:education>
+        <ex:hobby>Painting</ex:hobby>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="https://example.org/Spot">
+        <ex:isA>Dog</ex:isA>
+        <ex:owner rdf:resource="https://example.org/John"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="https://example.org/Emma">
+        <ex:isA>Human</ex:isA>
+        <ex:age>15</ex:age>
+        <ex:hobby>Painting</ex:hobby>
+    </rdf:Description>
+
+</rdf:RDF>
+
