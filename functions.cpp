@@ -100,14 +100,6 @@ void apply_life_rules(librdf_world* world, librdf_model* model) {
         librdf_uri* predicate_uri = librdf_node_get_uri(predicate);
         const char* predicate_uri_str = (const char*) librdf_uri_as_string(predicate_uri);
 
-        if (librdf_node_is_resource(predicate) && strcmp(predicate_uri_str, "https://example.org/age") == 0)
-        {
-            int age = std::stoi((const char*)librdf_node_get_literal_value(object));
-            if (age > 18) {
-                add_new_statement(world, model, subject, (const unsigned char*)"https://example.org/isAdult", (const unsigned char*)"Adult");
-            }
-        }
-
         if (librdf_node_is_resource(predicate) && strcmp(predicate_uri_str, "https://example.org/education") == 0)
         {
             std::string scienceDegree = (const char*)librdf_node_get_literal_value(object);

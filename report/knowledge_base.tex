@@ -1,0 +1,634 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[ukrainian]{babel}
+\usepackage{graphicx}
+\usepackage{parskip}
+\usepackage[left=2cm, right=2cm, top=2cm, bottom=2cm]{geometry}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{minted}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries}
+  {\thesection}
+  {1em}
+  {}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vfill
+    {\bfseries\Huge
+        Створення бази знань із використанням Redland Resource Description Framework
+    }
+    \vfill
+    \vfill
+    {\Large
+        Автор роботи: Олексій Степанюк \\
+        \vspace{1cm}
+        Група: ТТП-42 \\
+        \vspace{1cm}
+    }
+    \vfill
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Вступ}
+
+У сучасних умовах прискореного розвитку IT-технологій значну роль відіграють бази знань. Вони дозволяють структуровано зберігати, обробляти та отримувати доступ до великих об'ємів даних. У даному звіті розглядається використання Redland Resource Description Framework (RDF) для створення бази знань, що включає факти, правила виведення та процедури. RDF є стандартом для представлення інформації в Інтернеті. У даному проєкті було створено базу знань, яка використовує RDF для збереження, обробки та виведення даних за допомогою мов програмування C/C++ та бібліотеки Redland RDF.
+
+\section{Огляд інструментів}
+
+Опишемо можливі рішення для створення баз знань.
+
+\subsection{OWL}
+
+OWL (Web Ontology Language) - це мова специфікації, призначена для представлення онтологій у так званому семантичному вебі. Вона дозволяє визначати класи, властивості класів та відношення між ними. Основні характеристики OWL включають такі характеристики.
+
+\begin{itemize}
+    \item Ієрархію класів та властивостей.
+    \item Обмеження на властивості, такі як обмеження на кількість значень або на типи значень.
+    \item Підтримку еквівалентності, інверсності, симетричності та інших відношень.
+\end{itemize}
+
+\subsection{Drools}
+
+Drools - це платформа для автоматизації бізнес-правил. Вона використовує мову правил DRL (Drools Rule Language) для визначення та виконання правил. Характеристики Drools включають такі характеристики.
+
+\begin{itemize}
+    \item Висока продуктивність та масштабованість.
+    \item Централізоване управління правилами.
+    \item Інтеграція з Java та іншими платформами.
+    \item Підтримка зовнішніх джерел даних для завантаження правил.
+\end{itemize}
+
+\subsection{База даних із підтримкою RDF}
+
+RDF (Resource Description Framework) - це стандарт для опису ресурсів в Інтернеті. Бази даних із підтримкою RDF дозволяють зберігати, запитувати та маніпулювати RDF-триплетами. Характеристики включають такі характеристики.
+
+\begin{itemize}
+    \item Стандартизований формат запитів SPARQL.
+    \item Підтримка різних форматів серіалізації RDF, таких як XML, N-Triples та Turtle.
+    \item Висока гнучкість у представленні даних завдяки відсутності фіксованої схеми.
+\end{itemize}
+
+\subsection{Інші рішення}
+
+Існує безліч інших рішень для створення бази знань. Наведемо відповідні приклади.
+
+\begin{itemize}
+    \item Пропрієтарні рішення, такі як IBM Watson, Oracle Semantic Graph та ін.
+    \item Графові бази даних, такі як Neo4j або OrientDB.
+    \item NoSQL бази даних, такі як MongoDB, які можуть зберігати структуровані та неструктуровані дані.
+\end{itemize}
+
+\section{Структура бази знань}
+
+База знань — це специфічна система, що зберігає інформацію у вигляді фактів, правил виведення та процедур застосування цих правил. Кожна з цих компонент бази знань відіграє важливу роль у процесі роботи з інформацією та отриманням нових знань. Опишемо кожну з цих компонент у вигляді структури <F, R, P>.
+
+\subsection{F: Явні факти}
+
+Явні факти (F) представляють з себе основні декларативні відомості про домен проблеми, що безпосередньо задано в базі знань. Вони є вихідною точкою для логічного виведення та інтерпретації. Зазвичай, явні факти зберігаються у вигляді тверджень або даних, що мають певне значення і не потребують додаткової перевірки.
+
+Приклади явних фактів наведено нижче.
+
+\begin{itemize}
+    \item "Сонце є зіркою."
+    \item "Київ — столиця України."
+\end{itemize}
+
+\subsection{R: Правила виведення}
+
+Правила виведення (R) є основним механізмом для отримання нових фактів на основі вже відомих. Вони містять умови та висновки. Якщо умови є вірними, висновок може бути виведено як новий факт.
+
+Приклад правила наведено нижче.
+
+\begin{quote}
+    Якщо X — столиця Y і Y є країною Європи, то X — місто в Європі.
+\end{quote}
+
+Такі правила дозволяють дедуктивно робити висновки на основі початкових фактів.
+
+\subsection{P: Процедури застосування правил}
+
+Процедури застосування правил (P) визначають, як і коли слід застосовувати правила виведення. Вони можуть включати в себе алгоритми, стратегії та методики, що вказують, як обирати правила для застосування та в якому порядку, а також як комбінувати різні правила для отримання нових висновків.
+
+Ці процедури можуть бути дуже складними і залежати від конкретних цілей бази знань, домена знань, а також специфіки задачі виведення.
+
+\section{Структура бази знань на основі RDF}
+
+База знань, яка використовує RDF (Resource Description Framework), відзначається особливим підходом до представлення інформації та взаємодії з нею. RDF є стандартом для представлення інформації у вигляді триплетів: <суб'єкт, предикат, об'єкт>, що дозволяє створювати семантичні веб-дані.
+
+\subsection{F: Явні факти у форматі RDF}
+
+У контексті RDF, явні факти представлені у вигляді триплетів. Суб'єкт - це ресурс, предикат вказує на тип взаємодії або відношення, а об'єкт є цільовим ресурсом або літералом.
+
+Приклад.
+
+\begin{itemize}
+    \item <https://example.org/Kyiv, https://www.w3.org/2000/01/rdf-schema#label, "Київ">
+    \item <https://example.org/Kyiv, https://example.org/isCapitalOf, http://example.org/Ukraine>
+\end{itemize}
+
+Ці триплети представляють факти: "Київ має мітку 'Київ'" та "Київ є столицею України".
+
+\subsection{R: Правила виведення у RDF}
+
+У контексті RDF та семантичного вебу для правил виведення часто використовуються такі інструменти, як OWL (Web Ontology Language) або RIF (Rule Interchange Format). Ці інструменти дозволяють створювати більш складні висновки на основі початкових RDF-триплетів.
+
+Приклад правила на основі OWL.
+
+\begin{quote}
+Якщо X rdf:type Person та X hasSibling Y, тоді Y rdf:type Person.
+\end{quote}
+
+Тобто, якщо X є особою і X має брата або сестру Y, тоді Y також є особою.
+
+\subsection{P: Процедури застосування правил у RDF}
+
+Для обробки RDF даних і застосування правил виведення використовуються різноманітні інструменти та програмні рішення. Серед найпопулярніших можна виділити такі як Jena, RDFLib і Sesame. Ці бібліотеки та платформи надають різні механізми для зберігання, запитування (зазвичай за допомогою мови SPARQL) та обробки RDF-даних, а також реалізації різних правил виведення.
+
+Враховуючи специфіку RDF, процедури застосування правил можуть включати також роботу з онтологіями, запитами SPARQL та іншими особливостями семантичного вебу.
+
+\section{Програмна реалізація бази знань із використанням C/C++ і RDF}
+
+\subsection{Основний код}
+
+Основний код можна поділити на три частини.
+
+\begin{itemize}
+    \item Конфігураційний файл CMake (CMakeLists.txt), який надає інструкції для збірки проєкту.
+    \item Опис функцій (functions.h та functions.cpp), які надають можливість роботи з RDF.
+    \item Головний файл (main.cpp), де ініціалізуються основні структури бібліотеки Redland, виконується завантаження даних з RDF файлу та застосовуються правила до моделі RDF.
+\end{itemize}
+
+\subsection{Файл CMakeLists.txt}
+
+\begin{minted}[breaklines]{cmake}
+cmake_minimum_required(VERSION 3.26)
+project(knowledge_base)
+
+set(CMAKE_CXX_STANDARD 23)
+set(HEADERS functions.h)
+set(SOURCES functions.cpp main.cpp)
+
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(REDLAND REQUIRED IMPORTED_TARGET redland)
+
+add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
+
+target_link_libraries(${PROJECT_NAME} PkgConfig::REDLAND)
+\end{minted}
+
+\subsection{Пояснення до вихідного коду CMakeLists.txt}
+
+Цей файл є конфігураційним для системи автоматизованої збірки CMake. Ця система дозволяє описати, як потрібно компілювати та збирати програму.
+
+\begin{itemize}
+    \item Вказано мінімальну потрібну версію CMake.
+    \item Створено проєкт під назвою knowledge\_base.
+    \item Встановлено стандарт C++23 для компіляції.
+    \item Вказано заголовочні та джерельні файли проекту.
+    \item Здійснено пошук пакета PkgConfig.
+    \item Виконано пошук бібліотеки redland за допомогою PkgConfig.
+    \item Додано виконуваний файл з вказаними джерельними файлами.
+    \item Зв'язано виконуваний файл із знайденою бібліотекою redland.
+\end{itemize}
+
+\subsection{Файл functions.h}
+
+\begin{minted}[breaklines]{c++}
+#pragma once
+
+#include "redland.h"
+#include <iostream>
+#include <cstring>
+
+void print_all_statements(librdf_model* model);
+void add_new_statement(librdf_world* world, librdf_model* model, librdf_node* subject, const unsigned char* predicateUri, const unsigned char* objectLiteral);
+void apply_common_rules(librdf_world* world, librdf_model* model);
+void apply_profession_rules(librdf_world* world, librdf_model* model);
+void apply_life_rules(librdf_world* world, librdf_model* model);
+\end{minted}
+
+\subsection{Пояснення до вихідного коду functions.h}
+
+Цей файл є заголовочним файлом, в якому описано відповідні сигнатури функцій та підключено необхідні бібліотеки.
+
+Функції, що описано, наведено нижче.
+
+\begin{itemize}
+    \item print\_all\_statement: виводить всі заяви (твердження) з моделі.
+    \item add\_new\_statement: додає нове твердження в модель.
+    \item apply\_common\_rules: застосовує загальні правила до моделі.
+    \item apply\_profession\_rules: застосовує правила, які є пов'язаними із професіями, до моделі.
+    \item apply\_life\_rules: застосовує правила, які є пов'язаними із життєвими обставинами, до моделі.
+\end{itemize}
+
+\subsection{Файл functions.cpp}
+
+\begin{minted}[breaklines]{c++}
+#include "functions.h"
+
+void print_all_statements(librdf_model* model) {
+    librdf_stream *stream = librdf_model_as_stream(model);
+    while (!librdf_stream_end(stream)) {
+        librdf_statement *statement = librdf_stream_get_object(stream);
+        librdf_node *subject = librdf_statement_get_subject(statement);
+        librdf_node *predicate = librdf_statement_get_predicate(statement);
+        librdf_node *object = librdf_statement_get_object(statement);
+
+        librdf_node_print(subject, stdout);
+        std::cout << " ";
+        librdf_node_print(predicate, stdout);
+        std::cout << " ";
+        librdf_node_print(object, stdout);
+        std::cout << "\n";
+
+        librdf_stream_next(stream);
+    }
+    librdf_free_stream(stream);
+}
+
+void add_new_statement(librdf_world* world, librdf_model* model, librdf_node* subject, const unsigned char* predicateUri, const unsigned char* objectLiteral) {
+    librdf_statement* newStatement = librdf_new_statement_from_nodes(
+            world,
+            librdf_new_node_from_node(subject),
+            librdf_new_node_from_uri_string(world, predicateUri),
+            librdf_new_node_from_literal(world, objectLiteral, nullptr, 0)
+    );
+    librdf_model_add_statement(model, newStatement);
+    librdf_free_statement(newStatement);
+}
+
+void apply_common_rules(librdf_world* world, librdf_model* model) {
+    librdf_stream* stream = librdf_model_as_stream(model);
+    while (!librdf_stream_end(stream)) {
+        librdf_statement* statement = librdf_stream_get_object(stream);
+
+        librdf_node* subject = librdf_statement_get_subject(statement);
+        librdf_node* predicate = librdf_statement_get_predicate(statement);
+        librdf_node* object = librdf_statement_get_object(statement);
+
+        if (librdf_node_is_literal(object) && strcmp((const char*)librdf_node_get_literal_value(object), "City") == 0) {
+            add_new_statement(world, model, subject, (const unsigned char*)"https://example.org/isCitizen", (const unsigned char*)"Citizen");
+        }
+
+        librdf_uri* predicate_uri = librdf_node_get_uri(predicate);
+        const char* predicate_uri_str = (const char*) librdf_uri_as_string(predicate_uri);
+
+        if (librdf_node_is_resource(predicate) && strcmp(predicate_uri_str, "https://example.org/age") == 0)
+        {
+            int age = std::stoi((const char*)librdf_node_get_literal_value(object));
+            if (age > 18) {
+                add_new_statement(world, model, subject, (const unsigned char*)"https://example.org/isAdult", (const unsigned char*)"Adult");
+            }
+        }
+
+        librdf_stream_next(stream);
+    }
+    librdf_free_stream(stream);
+}
+
+void apply_profession_rules(librdf_world* world, librdf_model* model) {
+    librdf_stream* stream = librdf_model_as_stream(model);
+    while (!librdf_stream_end(stream)) {
+        librdf_statement* statement = librdf_stream_get_object(stream);
+
+        librdf_node* subject = librdf_statement_get_subject(statement);
+        librdf_node* predicate = librdf_statement_get_predicate(statement);
+        librdf_node* object = librdf_statement_get_object(statement);
+
+        librdf_uri* predicate_uri = librdf_node_get_uri(predicate);
+        const char* predicate_uri_str = (const char*) librdf_uri_as_string(predicate_uri);
+
+        if (librdf_node_is_resource(predicate) && strcmp(predicate_uri_str, "https://example.org/profession") == 0)
+        {
+            std::string profession = (const char*)librdf_node_get_literal_value(object);
+            const auto* canDo = reinterpret_cast<const unsigned char*>("https://example.org/canDo");
+            if (profession == "Doctor") {
+                add_new_statement(world, model, subject, canDo, (const unsigned char*)"Treating patients");
+            } else if (profession == "Engineer") {
+                add_new_statement(world, model, subject, canDo, (const unsigned char*)"Building structures");
+            }
+        }
+
+        librdf_stream_next(stream);
+    }
+    librdf_free_stream(stream);
+}
+
+void apply_life_rules(librdf_world* world, librdf_model* model) {
+    librdf_stream* stream = librdf_model_as_stream(model);
+    while (!librdf_stream_end(stream)) {
+        librdf_statement* statement = librdf_stream_get_object(stream);
+
+        librdf_node* subject = librdf_statement_get_subject(statement);
+        librdf_node* predicate = librdf_statement_get_predicate(statement);
+        librdf_node* object = librdf_statement_get_object(statement);
+
+        librdf_uri* predicate_uri = librdf_node_get_uri(predicate);
+        const char* predicate_uri_str = (const char*) librdf_uri_as_string(predicate_uri);
+
+        if (librdf_node_is_resource(predicate) && strcmp(predicate_uri_str, "https://example.org/age") == 0)
+        {
+            int age = std::stoi((const char*)librdf_node_get_literal_value(object));
+            if (age > 18) {
+                add_new_statement(world, model, subject, (const unsigned char*)"https://example.org/isAdult", (const unsigned char*)"Adult");
+            }
+        }
+
+        if (librdf_node_is_resource(predicate) && strcmp(predicate_uri_str, "https://example.org/education") == 0)
+        {
+            std::string scienceDegree = (const char*)librdf_node_get_literal_value(object);
+            if (scienceDegree == "PhD") {
+                add_new_statement(world, model, subject, (const unsigned char*)"https://example.org/isScientist", (const unsigned char*)"Scientist");
+            }
+        }
+
+        if (librdf_node_is_resource(predicate) && strcmp(predicate_uri_str, "https://example.org/hobby") == 0)
+        {
+            std::string hobby = (const char*)librdf_node_get_literal_value(object);
+            if (hobby == "Guitar") {
+                add_new_statement(world, model, subject, (const unsigned char*)"https://example.org/isMusician", (const unsigned char*)"Guitarist");
+            }
+        }
+
+        if (librdf_node_is_resource(predicate) && strcmp((const char*)librdf_uri_as_string(librdf_node_get_uri(predicate)), "https://example.org/friend") == 0) {
+            librdf_statement* query = librdf_new_statement_from_nodes(
+                                    world,
+                                    librdf_new_node_from_node(object),
+                                    librdf_new_node_from_uri_string(world, (const unsigned char*)"https://example.org/hobby"), nullptr
+            );
+            librdf_stream* results = librdf_model_find_statements(model, query);
+            if (!librdf_stream_end(results)) {
+                librdf_statement* result = librdf_stream_get_object(results);
+                librdf_node* sharedHobby = librdf_statement_get_object(result);
+
+                librdf_statement* newStatement = librdf_new_statement_from_nodes(
+                        world,
+                        librdf_new_node_from_node(subject),
+                        librdf_new_node_from_uri_string(world, (const unsigned char*)"https://example.org/likelyToLike"),
+                        librdf_new_node_from_node(sharedHobby)
+                );
+                librdf_model_add_statement(model, newStatement);
+                librdf_free_statement(newStatement);
+            }
+            librdf_free_stream(results);
+            librdf_free_statement(query);
+        }
+
+        librdf_stream_next(stream);
+    }
+    librdf_free_stream(stream);
+}
+\end{minted}
+
+\subsection{Пояснення до вихідного коду functions.cpp}
+
+Цей файл є файлом реалізації, в якому реалізовано відповідні функції.
+
+Функції, що реалізовано, наведено нижче.
+
+\textbf{Функція print\_all\_statements}:
+
+\begin{itemize}
+    \item Отримує потік з усіх заяв (statements) у моделі.
+    \item Друкує суб'єкт, предикат і об'єкт кожної заяви.
+    \item Вивільняє ресурси після завершення.
+\end{itemize}
+
+\textbf{Функція add\_new\_statement}:
+
+\begin{itemize}
+    \item Створює нову заяву із заданими вузлами (nodes) для суб'єкта, предиката і об'єкта.
+    \item Додає заяву до моделі.
+    \item Вивільняє ресурси заяви.
+\end{itemize}
+
+\textbf{Функція apply\_common\_rules}:
+
+Ця функція додає нові заяви до моделі на основі загальних правил.
+
+\begin{itemize}
+    \item Якщо об'єкт заяви є літералом і дорівнює "City", додає нову заяву, що суб'єкт є громадянином ("Citizen").
+    \item Якщо предикат заяви є ресурсом і дорівнює URI "https://example.org/age", конвертує об'єкт (вік) у ціле число. Якщо вік більше 18, додає нову заяву, що суб'єкт є повнолітнім ("Adult").
+\end{itemize}
+
+\textbf{Функція apply\_profession\_rules}:
+
+Ця функція додає нові заяви на основі професійних правил. Якщо предикат заяви є ресурсом і дорівнює URI "https://example.org/profession", то маємо наступне.
+
+\begin{itemize}
+    \item Якщо об'єкт дорівнює "Doctor", додає нову заяву, що суб'єкт може лікувати пацієнтів.
+    \item Якщо об'єкт дорівнює "Engineer", додає нову заяву, що суб'єкт може будувати споруди.
+\end{itemize}
+
+\textbf{Функція apply\_life\_rules}:
+
+Ця функція додає нові заяви на основі правил, які є пов'язаними із життєвими характеристиками.
+
+\begin{itemize}
+    \item Якщо предикат заяви є ресурсом і дорівнює URI "https://example.org/education" і об'єкт дорівнює "PhD", додає нову заяву, що суб'єкт є вченим ("Scientist").
+    \item Якщо предикат заяви є ресурсом і дорівнює URI "https://example.org/hobby" і об'єкт дорівнює "Guitar", додає нову заяву, що суб'єкт є музикантом-гітаристом.
+    \item Якщо предикат заяви дорівнює URI "https://example.org/friend", шукає хобі цього друга і додає заяву, що суб'єкт, ймовірно, також полюбляє це хобі.
+\end{itemize}
+
+\subsection{Файл main.cpp}
+
+\begin{minted}[breaklines]{c++}
+#include "functions.h"
+
+int main() {
+    librdf_world* world = librdf_new_world();
+    librdf_world_open(world);
+
+    librdf_storage* storage = librdf_new_storage(world, "memory", "test", nullptr);
+    if (!storage) {
+        std::cerr << "Не вдалося створити сховище." << "\n";
+        return 1;
+    }
+
+    librdf_model* model = librdf_new_model(world, storage, nullptr);
+    if (!model) {
+        std::cerr << "Не вдалося створити модель." << "\n";
+        return 1;
+    }
+
+    librdf_parser* parser = librdf_new_parser(world, "rdfxml", nullptr, nullptr);
+    if (!parser) {
+        std::cerr << "Не вдалося створити парсер." << "\n";
+        return 1;
+    }
+
+    std::string filePath;
+    filePath.reserve(76);
+    filePath += "file:///home/alex_braun/Projects/";
+    filePath += "knowledge-base/cmake-build-debug/facts.rdf";
+
+    librdf_uri* uri = librdf_new_uri(world, reinterpret_cast<const unsigned char *>(filePath.data()));
+    if (!uri) {
+        std::cerr << "Не вдалося створити URI." << "\n";
+        return 1;
+    }
+
+    if (librdf_parser_parse_into_model(parser, uri, nullptr, model)) {
+        std::cerr << "Не вдалося десеріалізувати дані RDF." << "\n";
+        return 1;
+    }
+
+    librdf_free_uri(uri);
+    librdf_free_parser(parser);
+
+    std::cout << "Вихідні факти:\n";
+    print_all_statements(model);
+
+    std::cout << "Факти після застосування всіх правил:\n";
+    apply_common_rules(world, model);
+    apply_profession_rules(world, model);
+    apply_life_rules(world, model);
+    print_all_statements(model);
+
+    librdf_free_model(model);
+    librdf_free_storage(storage);
+    librdf_free_world(world);
+
+    return 0;
+}
+\end{minted}
+
+\subsection{Пояснення до вихідного коду main.cpp}
+
+Цей файл є точкою входу програми, де ініціалізується основний контекст для роботи із RDF, створюється модель та сховище, завантажуються дані, застосовуються правила і виводяться результати. Ось, як це відбувається покроково.
+
+\begin{itemize}
+    \item Ініціалізація "світу" для роботи із RDF.
+    \item Створення сховища та моделі.
+    \item Завантаження RDF-даних із файлу.
+    \item Вивід початкових фактів.
+    \item Застосування різних наборів правил до моделі.
+    \item Вивід фактів після застосування всіх правил.
+    \item Звільнення пам'яті.
+\end{itemize}
+
+\subsection{Приклад вхідних даних}
+
+Даний приклад представляє RDF-документ, що описує живі істоти. Якщо це люди, також описуються їхні вікові категорії, професії, освіту, хобі та інші характеристики.
+
+\begin{minted}[breaklines]{xml}
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="https://example.org/">
+
+    <rdf:Description rdf:about="https://example.org/John">
+        <ex:isA>Human</ex:isA>
+        <ex:livesIn>City</ex:livesIn>
+        <ex:age>30</ex:age>
+        <ex:profession>Doctor</ex:profession>
+        <ex:education>PhD</ex:education>
+        <ex:hobby>Guitar</ex:hobby>
+        <ex:friend rdf:resource="https://example.org/Lucy"/>
+    </rdf:Description>
+    
+    <rdf:Description rdf:about="https://example.org/Lucy">
+        <ex:isA>Human</ex:isA>
+        <ex:livesIn>City</ex:livesIn>
+        <ex:age>25</ex:age>
+        <ex:profession>Engineer</ex:profession>
+        <ex:education>Masters</ex:education>
+        <ex:hobby>Painting</ex:hobby>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="https://example.org/Spot">
+        <ex:isA>Dog</ex:isA>
+        <ex:owner rdf:resource="https://example.org/John"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="https://example.org/Emma">
+        <ex:isA>Human</ex:isA>
+        <ex:age>15</ex:age>
+        <ex:hobby>Painting</ex:hobby>
+    </rdf:Description>
+
+</rdf:RDF>
+\end{minted}
+
+\subsection{Вивід програми}
+
+Вихідні факти.
+
+\begin{lstlisting}[breaklines=true]
+<https://example.org/John> <https://example.org/isA> "Human"
+<https://example.org/John> <https://example.org/livesIn> "City"
+<https://example.org/John> <https://example.org/age> "30"
+<https://example.org/John> <https://example.org/profession> "Doctor"
+<https://example.org/John> <https://example.org/education> "PhD"
+<https://example.org/John> <https://example.org/hobby> "Guitar"
+<https://example.org/John> <https://example.org/friend> <https://example.org/Lucy>
+<https://example.org/Lucy> <https://example.org/isA> "Human"
+<https://example.org/Lucy> <https://example.org/livesIn> "City"
+<https://example.org/Lucy> <https://example.org/age> "25"
+<https://example.org/Lucy> <https://example.org/profession> "Engineer"
+<https://example.org/Lucy> <https://example.org/education> "Masters"
+<https://example.org/Lucy> <https://example.org/hobby> "Painting"
+<https://example.org/Spot> <https://example.org/isA> "Dog"
+<https://example.org/Spot> <https://example.org/owner> <https://example.org/John>
+<https://example.org/Emma> <https://example.org/isA> "Human"
+<https://example.org/Emma> <https://example.org/age> "15"
+<https://example.org/Emma> <https://example.org/hobby> "Painting"
+\end{lstlisting}
+
+Факти після застосування всіх правил.
+
+\begin{lstlisting}[breaklines=true]
+<https://example.org/John> <https://example.org/isA> "Human"
+<https://example.org/John> <https://example.org/livesIn> "City"
+<https://example.org/John> <https://example.org/age> "30"
+<https://example.org/John> <https://example.org/profession> "Doctor"
+<https://example.org/John> <https://example.org/education> "PhD"
+<https://example.org/John> <https://example.org/hobby> "Guitar"
+<https://example.org/John> <https://example.org/friend> <https://example.org/Lucy>
+<https://example.org/Lucy> <https://example.org/isA> "Human"
+<https://example.org/Lucy> <https://example.org/livesIn> "City"
+<https://example.org/Lucy> <https://example.org/age> "25"
+<https://example.org/Lucy> <https://example.org/profession> "Engineer"
+<https://example.org/Lucy> <https://example.org/education> "Masters"
+<https://example.org/Lucy> <https://example.org/hobby> "Painting"
+<https://example.org/Spot> <https://example.org/isA> "Dog"
+<https://example.org/Spot> <https://example.org/owner> <https://example.org/John>
+<https://example.org/Emma> <https://example.org/isA> "Human"
+<https://example.org/Emma> <https://example.org/age> "15"
+<https://example.org/Emma> <https://example.org/hobby> "Painting"
+<https://example.org/John> <https://example.org/isCitizen> "Citizen"
+<https://example.org/John> <https://example.org/isAdult> "Adult"
+<https://example.org/Lucy> <https://example.org/isCitizen> "Citizen"
+<https://example.org/Lucy> <https://example.org/isAdult> "Adult"
+<https://example.org/John> <https://example.org/canDo> "Treating patients"
+<https://example.org/Lucy> <https://example.org/canDo> "Building structures"
+<https://example.org/John> <https://example.org/isScientist> "Scientist"
+<https://example.org/John> <https://example.org/isMusician> "Guitarist"
+<https://example.org/John> <https://example.org/likelyToLike> "Painting"
+\end{lstlisting}
+
+\section{Висновок}
+
+Було розглянуто різні аспекти розробки бази знань та методи її реалізації. Було досліджено або реалізовано такі ключові аспекти.
+
+\begin{itemize}
+    \item \textbf{Огляд різних підходів до реалізації баз знань.} Під час розгляду загальних концепцій, було з'ясовано важливість формального представлення знань. Розглянуто різні підходи до їхньої структуризації та зберігання.
+
+    \item \textbf{Використання C/C++ для реалізації бази знань.} Було розглянуто способи, за допомогою яких можна використовувати мови програмування C/C++ для створення та управління базами знань. Зокрема, було представлено реалізацію функцій для застосування різних правил на базу знань.
+
+    \item \textbf{Використання RDF для представлення знань.} RDF (Resource Description Framework) є стандартом для представлення знань у вигляді триплетів, що дозволяє створювати гнучкі та масштабовані структури даних. Було розглянуто приклад RDF-документа та його використання у контексті бази знань.
+
+    \item \textbf{Практичне застосування.} За допомогою створеної програмної реалізації і прикладу було показано, як можна застосовувати розроблену систему для конкретних завдань, включаючи обробку і аналіз даних.
+\end{itemize}
+
+Наостанок, зазначимо, що сучасний світ характеризується швидким накопиченням інформації, стрімким розвитком цифрових технологій та зростанням складності завдань, які людство намагається вирішити. У цьому контексті бази знань стають не тільки актуальними, а й незамінними інструментами. Вони дозволяють структуризувати великі обсяги даних, визначати зв'язки між різними елементами інформації та надавати їй семантичний зміст. Така глибока структуризація знань сприяє ефективній взаємодії між людьми та технологіями, підвищує продуктивність систем автоматичного оброблення інформації та сприяє розвитку штучного інтелекту. У світі, де рішення повинні прийматися швидко та на основі великої кількості даних, бази знань відіграють ключову роль у забезпеченні інформаційної прозорості та ефективності процесів.
+
+\end{document}
